@@ -229,22 +229,24 @@ function renderQuestion(){
 $('previous').onclick=()=>{if(session.idx>0){session.idx--;renderQuestion()}};
 $('next').onclick=()=>{if(session.idx<session.items.length-1){session.idx++;renderQuestion()}else finish()};
 $('flag').onclick=()=>{const q=current();session.flags[q.id]=!session.flags[q.id];db.flag=[...new Set([...db.flag.filter(k=>k!==q.id),...(session.flags[q.id]?[q.id]:[])])];save();renderQuestion()};
-$('finish').onclick=()=>{let n=session.items.filter(q=>session.answers[q.id]).length;if(n<session.items.length&&!confirm('Имаш '+(session.items.length-n)+' неодговорени прашања. Да го завршам тестот?'))return;finish()};
+$('finish').onclick=()=>{let n=session.items.filter(q=>session.answers[q.id]||masteryStatus(q.id)).length;if(n<session.items.length&&!confirm('Имаш '+(session.items.length-n)+' прашања без одговор или ознака. Да го завршам тестот?'))return;finish()};
 function finish(){
  if(!session||session.ended)return;session.ended=true;clearInterval(timerId);
  const total=session.items.length,correct=session.items.filter(q=>session.answers[q.id]===q.a).length;
+ const attempted=session.items.filter(q=>session.answers[q.id]).length;
+ const known=session.items.filter(q=>masteryStatus(q.id)==='know').length;
  const wrong=session.items.filter(q=>session.answers[q.id] && session.answers[q.id]!==q.a).map(q=>q.id);
  db.wrong=[...new Set([...db.wrong,...wrong])];save();clearSessionSave();
  db.history.unshift({when:new Date().toISOString(),total,correct,subject:$('topic').value});db.history=db.history.slice(0,60);save();
  const remaining=session.items.filter(q=>masteryStatus(q.id)==='again').length;
- text('score',session.reviewMode?'↻ Уште '+remaining+' за повторување':correct+' / '+total+' · '+Math.round(correct*100/total)+'%');
- $('score').className='score '+(session.reviewMode?'muted':correct/total>=.7?'pass':'fail');
- text('passText',session.reviewMode?'Означи ги научените прашања со „ГО ЗНАМ“, а останатите повторно вежбај ги.':correct/total>=.7?'Го достигна вежбовниот праг од 70%.':'Под вежбовниот праг од 70%. Повтори ги грешките.');
+ text('score',session.reviewMode?'↻ Уште '+remaining+' за повторување':attempted===0?'✓ '+known+' познати · ↻ '+remaining+' за повторување':correct+' / '+attempted+' од одговорените · '+Math.round(correct*100/attempted)+'%');
+ $('score').className='score '+(session.reviewMode||attempted===0?'muted':correct/attempted>=.7?'pass':'fail');
+ text('passText',session.reviewMode?'Означи ги научените прашања со „ГО ЗНАМ“, а останатите повторно вежбај ги.':attempted===0?'Ова е рачна процена на знаењето. Не претставува резултат од решен тест. Притисни „Повтори што не знам“.':attempted<total?'Одговорени се '+attempted+' од '+total+' прашања. Процентот се однесува само на одговорените.':correct/attempted>=.7?'Го достигна вежбовниот праг од 70%.':'Под вежбовниот праг од 70%. Повтори ги грешките.');
  const buckets=['59','60','61','62'].map(sid=>({sid,qs:session.items.filter(q=>q.sid===sid)})).filter(b=>b.qs.length);
- $('breakdown').innerHTML=buckets.map(b=>'<div class="box-stat"><b>'+safe(LABELS[b.sid])+'</b><div class="num">'+b.qs.filter(q=>session.answers[q.id]===q.a).length+' / '+b.qs.length+'</div></div>').join('');
+ $('breakdown').innerHTML=buckets.map(b=>'<div class="box-stat"><b>'+safe(LABELS[b.sid])+'</b><div class="num">'+(attempted===0?'✓ '+b.qs.filter(q=>masteryStatus(q.id)==='know').length+' · ↻ '+b.qs.filter(q=>masteryStatus(q.id)==='again').length:b.qs.filter(q=>session.answers[q.id]===q.a).length+' / '+b.qs.filter(q=>session.answers[q.id]).length+' одговорени')+'</div></div>').join('');
  $('reviewList').innerHTML=session.items.map((q,i)=>{
  const got=session.answers[q.id],ok=got===q.a;
- return '<div class="review"><div class="row space"><b>'+(i+1)+'. '+safe(q.q)+'</b><span class="'+(ok?'pass':'fail')+'">'+(ok?'✓ Точно':'✕ Погрешно / без одговор')+'</span></div><p class="quiet">'+safe(LABELS[q.sid])+' · бр. '+q.n+'</p><p>Твој одговор: '+safe(got||'Неодговорено')+'</p><p><strong>Одговор од збирката:</strong> '+safe(q.a)+'</p><p class="small">Правен основ: '+safe(q.legal||'не е утврден')+' · '+(q.st==='supported'?'Поткрепен со достапен пропис или претходна проверка':'Работен одговор (непотврден)')+'</p></div>'
+ return '<div class="review"><div class="row space"><b>'+(i+1)+'. '+safe(q.q)+'</b><span class="'+(ok?'pass':'fail')+'">'+(session.answers[q.id]?(ok?'✓ Точно':'✕ Погрешно'):(masteryStatus(q.id)==='know'?'✓ Го знам':masteryStatus(q.id)==='again'?'↻ За повторување':'Неозначено'))+'</span></div><p class="quiet">'+safe(LABELS[q.sid])+' · бр. '+q.n+'</p><p>Твој одговор: '+safe(got||'Неодговорено')+'</p><p><strong>Одговор од збирката:</strong> '+safe(q.a)+'</p><p class="small">Правен основ: '+safe(q.legal||'не е утврден')+' · '+(q.st==='supported'?'Поткрепен со достапен пропис или претходна проверка':'Работен одговор (непотврден)')+'</p></div>'
  }).join('');
  $('wrongOnly').disabled=wrong.length===0;show('results');
 }
