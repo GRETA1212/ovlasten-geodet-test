@@ -12,3 +12,5 @@ Every question displays five possible answers:
 **Critical:** Choices created for practice have not been checked as official or all factually incorrect. Some may be ambiguous. Only 140 of the underlying proposed answers have support in the study materials or a previous verification; 987 remain provisional. Consult current Agency statutes and rulebooks before relying on any answer. The publicly accessible web app stores progress locally in the browser.
 
 Updated 11 November 2026.
+
+Update: all 1,127 questions are available by default; select "all questions" to complete the entire bank without a timer. Filtering to only previously supported answers is opt-in.

@@ -52,7 +52,7 @@ h1{font-size:24px;line-height:1.15;margin:0}h2{font-size:20px;margin:0 0 15px}h3
    <option value="60">2. Катастарски планови (200)</option>
    <option value="61">3. Премер и елаборати (220)</option>
    <option value="62">4. Катастар на недвижности (312)</option>
-   <option value="all">Сите четири предмети (1.127)</option>
+   <option value="all" selected>Сите четири предмети (1.127)</option>
   </select></div>
   <div class="field" id="countField"><label for="count">Број прашања во тестот</label><select id="count">
    <option value="10">10 — брзо вежбање</option>
@@ -60,13 +60,14 @@ h1{font-size:24px;line-height:1.15;margin:0}h2{font-size:20px;margin:0 0 15px}h3
    <option value="20">20 — проширено вежбање</option>
    <option value="60">60 — четири области × 15</option>
    <option value="100">100 — долг тест</option>
+   <option value="all">Сите прашања од избраниот предмет / сите 1.127 (без тајмер)</option>
   </select></div>
  </div>
- <div class="check"><input type="checkbox" checked id="verified"><label for="verified">Само прашања со законска/претходна проверка (140)</label></div>
+ <div class="check"><input type="checkbox" id="verified"><label for="verified">Само прашања со законска/претходна проверка (140)</label></div>
  <div class="check"><input type="checkbox" id="curated"><label for="curated">Само рачно подготвени опции (58)</label></div>
  <div class="check" id="timeField"><input type="checkbox" id="timed" checked><label for="timed">Со тајмер — 45 минути по област во тест</label></div>
  <div class="warning" id="setupWarning"><b>Напомена:</b> Од 1.127 прашања, 140 имаат поддршка во достапните правни текстови/претходни проверки. 58 прашања имаат рачно подготвени пет понудени одговори (вклучително 1 пример од фотографија). Останатите симулирани алтернативи може да содржат двосмислености или јазични неправилности. За сигурно учење користи Картички и провери го правниот основ.</div>
- <div class="row space"><span class="quiet">Симулација, не официјален испитен софтвер.</span><div class="row"><button class="btn" id="photoExample">Пробај го примерот од фотографијата</button><button class="btn primary" id="start">Започни вежбање →</button></div></div>
+ <div class="row space"><span class="quiet">Сите 1.127 прашања се достапни за вежбање; не е официјален испитен софтвер.</span><div class="row"><button class="btn" id="photoExample">Пробај го примерот од фотографијата</button><button class="btn primary" id="start">Започни вежбање →</button></div></div>
 </section>
 <section id="quiz" class="card hide">
  <div class="row space"><span id="qmeta" class="pill">Прашање 1/15</span><div class="row"><span id="qflag" class="small"></span><span class="timer" id="clock">45:00</span></div></div>
@@ -144,11 +145,12 @@ function setupStart(){
  if(mode==='flash'){
   flashOrder=shuffle(pool);flashIdx=0;show('flash');renderFlash();return
  }
- const n=Number($('count').value),subject=$('topic').value;
+ const wholeBank=$('count').value==='all';
+ const n=wholeBank?pool.length:Number($('count').value),subject=$('topic').value;
  let chosen;try{chosen=picks(pool,n,subject==='all'&&n===60)}catch(e){alert(e.message);return}
  if(chosen.length<n){alert('Со овие филтри се достапни само '+chosen.length+' прашања. Намали го бројот или исклучи го филтерот.');return}
  const items=chosen.map(q=>({...q,display:shuffle(q.choices)}));
- session={items,idx:0,answers:{},flags:{},timed:$('timed').checked,start:Date.now(),duration:45*60*1000*(subject==='all'&&n===60?4:1),ended:false};
+ session={items,idx:0,answers:{},flags:{},timed:!wholeBank&&$('timed').checked,start:Date.now(),duration:45*60*1000*(subject==='all'&&n===60?4:1),ended:false};
  clearInterval(timerId);if(session.timed)timerId=setInterval(tick,1000);
  show('quiz');renderQuestion();
 }
