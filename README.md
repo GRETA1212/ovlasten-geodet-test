@@ -1,10 +1,14 @@
-# Овластен геодет — пробен испит
+# Овластен геодет — 1127 прашања со пет слични понудени одговори
 
-Mobile-friendly practice test with 1,127 original questions from the public question bank for the surveyor licensing exam in North Macedonia.
+This is an **unofficial practice exam**, not the official cadastral examination system.
 
-**Important:** This is an unofficial practice resource, not an official answer key or official exam software. Most proposed answers have not been independently checked against the latest statutes. Automatically generated wrong-answer choices may occasionally be ambiguous. For exact statutory wording, consult the Agency for Real Estate Cadastre.
+Original exam-bank questions: 395 + 200 + 220 + 312 = 1,127.
+Every question displays five possible answers:
+* 1 question (MAKPOS) reproduces the five alternatives visible in the user-provided printed sample.
+* 21 questions have manually prepared options from the earlier practice application.
+* 36 have additional manually refined nearby alternatives.
+* 1,069 use newly generated nearby alternatives which modify a key technical or legal condition, number, term, method or authority in the working answer.
 
-The page works without a server after it has loaded. Progress is kept in browser local storage, on your own device; no analytics or user accounts.
+**Critical:** Choices created for practice have not been checked as official or all factually incorrect. Some may be ambiguous. Only 140 of the underlying proposed answers have support in the study materials or a previous verification; 987 remain provisional. Consult current Agency statutes and rulebooks before relying on any answer. The publicly accessible web app stores progress locally in the browser.
 
-## Printed-exam format
-The MAKPOS question (subject 59, question 13) uses the five alternatives visible in the user's printed sample. For other questions, alternatives are hand-written practice choices or automatically selected from other answers, NOT official exam distractors.
+Updated 11 November 2026.
