@@ -56,11 +56,11 @@ h1{font-size:24px;line-height:1.15;margin:0}h2{font-size:20px;margin:0 0 15px}h3
   </select></div>
   <div class="field" id="countField"><label for="count">Број прашања во тестот</label><select id="count">
    <option value="10">10 — брзо вежбање</option>
-   <option value="15" selected>15 — една област</option>
+   <option value="15">15 — една област</option>
    <option value="20">20 — проширено вежбање</option>
    <option value="60">60 — четири области × 15</option>
    <option value="100">100 — долг тест</option>
-   <option value="all">Сите прашања од избраниот предмет / сите 1.127 (без тајмер)</option>
+   <option value="all" selected>Сите прашања од избраниот предмет / сите 1.127 (без тајмер)</option>
   </select></div>
  </div>
  <div class="check"><input type="checkbox" id="verified"><label for="verified">Само прашања со законска/претходна проверка (140)</label></div>
@@ -154,6 +154,7 @@ function setupStart(){
  clearInterval(timerId);if(session.timed)timerId=setInterval(tick,1000);
  show('quiz');renderQuestion();
 }
+$('topic').addEventListener('change',()=>{$('count').value='all'});
 $('start').onclick=setupStart;
 $('photoExample').onclick=()=>{
  mode='exam';settings();
@@ -207,7 +208,7 @@ function finish(){
  }).join('');
  $('wrongOnly').disabled=wrong.length===0;show('results');
 }
-$('again').onclick=()=>{reviewOnly=false;setupStart()};$('backSetup').onclick=()=>{clearInterval(timerId);show('setup')};
+$('again').onclick=()=>{reviewOnly=false;$('count').value='all';setupStart()};$('backSetup').onclick=()=>{clearInterval(timerId);show('setup')};
 $('wrongOnly').onclick=()=>{const ids=new Set(db.wrong);let qs=shuffle(BANK.filter(q=>ids.has(q.id))).slice(0,20);if(!qs.length)return;
  session={items:qs.map(q=>({...q,display:shuffle(q.choices)})),idx:0,answers:{},flags:{},timed:false,start:Date.now(),duration:0,ended:false};
  clearInterval(timerId);show('quiz');renderQuestion()};
