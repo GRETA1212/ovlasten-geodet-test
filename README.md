@@ -5,3 +5,6 @@ Mobile-friendly practice test with 1,127 original questions from the public ques
 **Important:** This is an unofficial practice resource, not an official answer key or official exam software. Most proposed answers have not been independently checked against the latest statutes. Automatically generated wrong-answer choices may occasionally be ambiguous. For exact statutory wording, consult the Agency for Real Estate Cadastre.
 
 The page works without a server after it has loaded. Progress is kept in browser local storage, on your own device; no analytics or user accounts.
+
+## Printed-exam format
+The MAKPOS question (subject 59, question 13) uses the five alternatives visible in the user's printed sample. For other questions, alternatives are hand-written practice choices or automatically selected from other answers, NOT official exam distractors.
